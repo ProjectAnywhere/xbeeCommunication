@@ -25,6 +25,7 @@ unsigned int receivedDataLength=0;
 
 unsigned int xbeeRxPin =2;          //Using the Digital Pin 2 of the Arduino Uno as the Rx for Xbee through Software serial
 unsigned int xbeeTxPin =3;          //Digital Pin 3 will be the Xbee TX Pin
+unsigned int servoPin =9;
 
 //If the XBee was connected using the XBee Shield, it would be automatically connected to the hardware serial RX and TX pins
 //of the Arduino Uno board, which are pins 0 and 1 respectively.
@@ -112,6 +113,8 @@ void setup(){
   
   Serial.begin(9600);
   xbeeArd.begin(9600);
+  myServoA.attach(servoPin);
+  myServoA.write(100);
 }
 
 
@@ -270,6 +273,7 @@ int parsePacket(){
  // for(int i=4; i<length 
  
    int dataLength = length -12;
+   Serial.println();
    Serial.print("Data length == ");
    Serial.println(dataLength);
    return dataLength;
@@ -352,6 +356,8 @@ void rotateServoAclockwise(int numStepsA)
   int a;
   for(a =0; a < numStepsA; a++)
   {
+    Serial.print("Inside Rotate A CW. Steps = ");
+    Serial.println(a);
     myServoA.write(0);
     delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
@@ -420,7 +426,10 @@ void loop(){
     
     angleA = ((parsedData[1] - 48)*100) + ((parsedData[2] - 48)*10) + (parsedData[3] - 48);
     angleB = ((parsedData[5] - 48)*100) + ((parsedData[6] - 48)*10) + (parsedData[7] - 48);
-    
+    Serial.print("AngleA = ");
+    Serial.println(angleA);
+    Serial.print("AngleB = ");
+    Serial.println(angleB);
     stepA = angleA/degreesPerStepA;
     stepB = angleB/degreesPerStepB;
      
@@ -467,8 +476,9 @@ void loop(){
        Serial.print("] = ");
        Serial.write(parsedData[i]);
        Serial.println("\n\n");
+       parsedData[i] = '0';
      }
-     
+     dataReceivedFlag =false;
    }
   
 }
