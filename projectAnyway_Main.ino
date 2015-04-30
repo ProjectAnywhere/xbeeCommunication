@@ -415,7 +415,7 @@ void loop(){
     
     directionA = parsedData[0] - 48;
     directionA = directionA % 2;
-    directionB = parsedData[3] - 48;
+    directionB = parsedData[4] - 48;
     directionB = directionB % 2;
     
     angleA = ((parsedData[1] - 48)*100) + ((parsedData[2] - 48)*10) + (parsedData[3] - 48);
