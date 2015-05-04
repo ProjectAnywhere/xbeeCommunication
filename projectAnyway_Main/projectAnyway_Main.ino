@@ -40,7 +40,7 @@ SoftwareSerial xbeeArd(xbeeRxPin, xbeeTxPin);    //Using software serial of the 
  Created on 18th April 2015
  by Ekta Bindlish
  
- This program drives a bipolar stepper motor.
+ This program drives a bipolar stepper motor/servo motor.
  The 1st motor is attached to digital pins 8 - 11 of the Arduino.
  The 2nd motor is attached to digital pins 4 -  7 of the Arduino.
  The motor will step one step at a time. 
@@ -58,10 +58,10 @@ char directionB;
 char buffer1[100];
 
 // the stepsPerRevolution and degreesPerStep were taken from the motor specs
-const int stepsPerRevolution = 48;  // motor takes 48 steps per minute
-const double degreesPerStepA = 10;
-const double degreesPerStepB = 10;  // motor takes 7.5 degrees per step
-
+const int stepsPerRevolution = 48;  // stepper motor takes 48 steps per minute
+const double degreesPerStepA = 10;  // motor takes 10 degrees per step - servo 
+const double degreesPerStepB = 10;  // motor takes 10 degrees per step - servo
+const int ServoDelay = 30;
 // initialize stepper motor A on pins 8 through 11:
 //for clockwise rotation
 //brown:  pin 8
@@ -114,10 +114,13 @@ void setup(){
   
   Serial.begin(9600);
   xbeeArd.begin(9600);
-  myServoA.attach(servoPinA);
-  myServoA.write(100);
-  myServoB.attach(servoPinB);
-  myServoB.write(100);
+//  myServoA.attach(servoPinA);
+//  myServoA.write(100);
+//  myServoB.attach(servoPinB);
+//  myServoB.write(100);
+  
+//  digitalWrite(servoPinA, LOW);
+//  digitalWrite(servoPinB, LOW);
 }
 
 
@@ -356,32 +359,33 @@ void readSerial(){
 //rotate servo A with n number of steps clockwise
 void rotateServoAclockwise(int numStepsA)
 {
-  //myServoA.attach(servoPinA);
+  myServoA.attach(servoPinA);
+  //digitalWrite(servoPinA, HIGH);
   int a;
-  for(a =0; a < numStepsA; a++)
-  {
-    Serial.print("Inside Rotate A CW. Steps = ");
-    Serial.println(a);
+//  for(a =0; a < numStepsA; a++)
+//  {
     myServoA.write(0);
-    delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(ServoDelay*numStepsA);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
-  }
-  //myServoA.detach();
+//  }
+  myServoA.detach();
+  //digitalWrite(servoPinA, LOW);
 }
 
 //rotate servo A with n number of steps clockwise
 void rotateServoAanticlock(int numStepsA)
 {
-  //myServoA.attach(servoPinA);
+  myServoA.attach(servoPinA);
+  //digitalWrite(servoPinA, HIGH);
   int a;
-  Serial.print("Inside Rotate A");
-  for(a =0; a < numStepsA; a++)
-  {
+//  for(a =0; a < numStepsA; a++)
+//  {
     myServoA.write(180);
-    delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(ServoDelay*numStepsA);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
-  }
-  //myServoA.detach();
+//  }
+  myServoA.detach();
+  //digitalWrite(servoPinA, LOW);
 }
 
 
@@ -409,33 +413,34 @@ void rotateServoAanticlock(int numStepsA)
 */
 void rotateServoBclockwise(int numStepsB)
 {
-//  myServoB.attach(servoPinB);
+  myServoB.attach(servoPinB);
+  //digitalWrite(servoPinB, HIGH);
   int a;
-  Serial.print("Inside Rotate B");
-  for(a =0; a < numStepsB; a++)
-  {
-    Serial.print("Inside Rotate A CW. Steps = ");
-    Serial.println(a);
+//  Serial.print("Inside Rotate B");
+//  for(a =0; a < numStepsB; a++)
+ // {
     myServoB.write(0);
-    delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(ServoDelay*numStepsB);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoB.write(100);
-  }
-//  myServoB.detach();
+ // }
+  myServoB.detach();
+  //digitalWrite(servoPinB, LOW);
 }
 
 //rotate servo A with n number of steps clockwise
 void rotateServoBanticlock(int numStepsB)
 {
-  //myServoB.attach(servoPinB);
+  myServoB.attach(servoPinB);
+  //digitalWrite(servoPinB, HIGH);
   int a;
-  Serial.print("Inside Rotate B");
-  for(a =0; a < numStepsB; a++)
-  {
+//  for(a =0; a < numStepsB; a++)
+//  {
     myServoB.write(180);
-    delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(ServoDelay*numStepsB);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoB.write(100);
-  }
-  //myServoB.detach();
+//  }
+  myServoB.detach();
+  //digitalWrite(servoPinB, LOW);
 }
 
 
