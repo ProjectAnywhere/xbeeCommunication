@@ -25,8 +25,8 @@ unsigned int receivedDataLength=0;
 
 unsigned int xbeeRxPin =2;          //Using the Digital Pin 2 of the Arduino Uno as the Rx for Xbee through Software serial
 unsigned int xbeeTxPin =3;          //Digital Pin 3 will be the Xbee TX Pin
-unsigned int servoPin =9;
-
+unsigned int servoPinA =9;
+unsigned int servoPinB =10;
 //If the XBee was connected using the XBee Shield, it would be automatically connected to the hardware serial RX and TX pins
 //of the Arduino Uno board, which are pins 0 and 1 respectively.
 SoftwareSerial xbeeArd(xbeeRxPin, xbeeTxPin);    //Using software serial of the arduino since I am connecting the xbee without the shield to the Arduino. Need Software serial since the Arduino Rx and Tx is already used
@@ -60,7 +60,7 @@ char buffer1[100];
 // the stepsPerRevolution and degreesPerStep were taken from the motor specs
 const int stepsPerRevolution = 48;  // motor takes 48 steps per minute
 const double degreesPerStepA = 10;
-const double degreesPerStepB = 7.5;  // motor takes 7.5 degrees per step
+const double degreesPerStepB = 10;  // motor takes 7.5 degrees per step
 
 // initialize stepper motor A on pins 8 through 11:
 //for clockwise rotation
@@ -82,6 +82,7 @@ const double degreesPerStepB = 7.5;  // motor takes 7.5 degrees per step
 
 //Using servo instead
 Servo myServoA;
+Servo myServoB;
 
 // initialize stepper motor B on pins 4 through 7:
 //for clockwise rotation
@@ -90,7 +91,7 @@ Servo myServoA;
 //orange: pin 6 
 //yellow: pin 7 
 //no other connections needed
-Stepper myStepperB(stepsPerRevolution, 4, 5, 6, 7);
+//Stepper myStepperB(stepsPerRevolution, 4, 5, 6, 7);
 
 // initialize stepper motor B on pins 4 through 7:
 //for anti-clockwise rotation
@@ -99,7 +100,7 @@ Stepper myStepperB(stepsPerRevolution, 4, 5, 6, 7);
 //orange: pin 6 
 //yellow: pin 7 
 //no other connections needed
-Stepper myStepperB1(stepsPerRevolution, 6, 7, 4, 5);
+//Stepper myStepperB1(stepsPerRevolution, 6, 7, 4, 5);
 
 
 /**********************************************************************************************************************/
@@ -113,8 +114,10 @@ void setup(){
   
   Serial.begin(9600);
   xbeeArd.begin(9600);
-  myServoA.attach(servoPin);
+  myServoA.attach(servoPinA);
   myServoA.write(100);
+  myServoB.attach(servoPinB);
+  myServoB.write(100);
 }
 
 
@@ -353,6 +356,7 @@ void readSerial(){
 //rotate servo A with n number of steps clockwise
 void rotateServoAclockwise(int numStepsA)
 {
+  //myServoA.attach(servoPinA);
   int a;
   for(a =0; a < numStepsA; a++)
   {
@@ -362,23 +366,27 @@ void rotateServoAclockwise(int numStepsA)
     delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
   }
+  //myServoA.detach();
 }
 
 //rotate servo A with n number of steps clockwise
 void rotateServoAanticlock(int numStepsA)
 {
+  //myServoA.attach(servoPinA);
   int a;
+  Serial.print("Inside Rotate A");
   for(a =0; a < numStepsA; a++)
   {
     myServoA.write(180);
     delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
   }
+  //myServoA.detach();
 }
 
 
 //rotate motor B with n number of steps clockwise
-void rotateStepperBclockwise(int numStepsB)
+/*void rotateStepperBclockwise(int numStepsB)
 {
   int b;
   for (b = 0; b < numStepsB; b++)
@@ -387,9 +395,9 @@ void rotateStepperBclockwise(int numStepsB)
     delay(500);
   }  
 }
-
+*/
 //rotate motor B with n number of steps anti-clockwise
-void rotateStepperBanticlock(int numStepsB1)
+/*void rotateStepperBanticlock(int numStepsB1)
 {
   int b;
   for (b = 0; b < numStepsB1; b++)
@@ -398,6 +406,38 @@ void rotateStepperBanticlock(int numStepsB1)
     delay(500);
   }  
 }
+*/
+void rotateServoBclockwise(int numStepsB)
+{
+//  myServoB.attach(servoPinB);
+  int a;
+  Serial.print("Inside Rotate B");
+  for(a =0; a < numStepsB; a++)
+  {
+    Serial.print("Inside Rotate A CW. Steps = ");
+    Serial.println(a);
+    myServoB.write(0);
+    delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    myServoB.write(100);
+  }
+//  myServoB.detach();
+}
+
+//rotate servo A with n number of steps clockwise
+void rotateServoBanticlock(int numStepsB)
+{
+  //myServoB.attach(servoPinB);
+  int a;
+  Serial.print("Inside Rotate B");
+  for(a =0; a < numStepsB; a++)
+  {
+    myServoB.write(180);
+    delay(40);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    myServoB.write(100);
+  }
+  //myServoB.detach();
+}
+
 
 //&&&&&&&&&&&&&&&&&&&&&&   END OF MOTOR CONTROL CODE    &&&&&&&&&&&&&&&&&&&&&&
 
@@ -461,11 +501,11 @@ void loop(){
     {
       if (!directionB)
       {
-        rotateStepperBclockwise(stepB);
+        rotateServoBclockwise(stepB);
       }
       else
       {
-        rotateStepperBanticlock(stepB);
+        rotateServoBanticlock(stepB);
       }
     }
      
