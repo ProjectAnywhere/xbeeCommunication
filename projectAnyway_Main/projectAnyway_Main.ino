@@ -460,7 +460,8 @@ void rotateServoBanticlock(int numStepsB, int acwDelayB)
 
 */
 //NOTE: Only for angles 10, 20, 30, 40, and 90 degrees
-int calibratedDelayAngles(char clockRotation, char angleDigit1, char angleDigit2){
+//Motor A is the motor that rotates the entire system horizontally and Motor B rotates the mirror vetrically 
+int calibratedDelayAngles_MotorA(char clockRotation, char angleDigit1, char angleDigit2){
     
     int calibratedDelay =0;
     
@@ -469,11 +470,11 @@ int calibratedDelayAngles(char clockRotation, char angleDigit1, char angleDigit2
       //Clock Wise
       case '0':
         if( angleDigit1 == '1' && angleDigit2 == '0'){
-          calibratedDelay = 55;
+          calibratedDelay = 50;
           return calibratedDelay;
         }
         else if( angleDigit1 == '2' && angleDigit2 == '0'){
-          calibratedDelay = 95;
+          calibratedDelay = 90;
           return calibratedDelay;
         }
         else if( angleDigit1 == '3' && angleDigit2 == '0'){
@@ -481,7 +482,7 @@ int calibratedDelayAngles(char clockRotation, char angleDigit1, char angleDigit2
           return calibratedDelay;
         }
         else if( angleDigit1 == '4' && angleDigit2 == '0'){
-          calibratedDelay = 170;
+          calibratedDelay = 165;
           return calibratedDelay;
         }
         else if( angleDigit1 == '9' && angleDigit2 == '0'){
@@ -496,19 +497,19 @@ int calibratedDelayAngles(char clockRotation, char angleDigit1, char angleDigit2
       //Anti Clock Wise
       case '1':
         if( angleDigit1 == '1' && angleDigit2 == '0'){
-          calibratedDelay = 60;
+          calibratedDelay = 55;
           return calibratedDelay;
         }
         else if( angleDigit1 == '2' && angleDigit2 == '0'){
-          calibratedDelay = 105;
+          calibratedDelay = 85;
           return calibratedDelay;
         }
         else if( angleDigit1 == '3' && angleDigit2 == '0'){
-          calibratedDelay = 155;
+          calibratedDelay = 120;
           return calibratedDelay;
         }
         else if( angleDigit1 == '4' && angleDigit2 == '0'){
-          calibratedDelay = 180;
+          calibratedDelay = 160;
           return calibratedDelay;
         }
         else if( angleDigit1 == '9' && angleDigit2 == '0'){
@@ -519,13 +520,76 @@ int calibratedDelayAngles(char clockRotation, char angleDigit1, char angleDigit2
           Serial.println("No calibrated delay for given angle Anti CW"); 
           return 0;
         }
-      
-    
-    
+
     }
     
 }
 
+
+
+int calibratedDelayAngles_MotorB(char clockRotation, char angleDigit1, char angleDigit2){
+    
+    int calibratedDelayB =0;
+    
+    switch(clockRotation){
+      
+      //Clock Wise
+      case '0':
+        if( angleDigit1 == '1' && angleDigit2 == '0'){
+          calibratedDelayB = 55;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '2' && angleDigit2 == '0'){
+          calibratedDelayB = 95;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '3' && angleDigit2 == '0'){
+          calibratedDelayB = 130;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '4' && angleDigit2 == '0'){
+          calibratedDelayB = 170;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '9' && angleDigit2 == '0'){
+          calibratedDelayB = 360;
+          return calibratedDelayB;
+        }
+        else{
+          Serial.println("No calibrated delay for given angle"); 
+          return 0;
+        }
+      
+      //Anti Clock Wise
+      case '1':
+        if( angleDigit1 == '1' && angleDigit2 == '0'){
+          calibratedDelayB = 60;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '2' && angleDigit2 == '0'){
+          calibratedDelayB = 105;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '3' && angleDigit2 == '0'){
+          calibratedDelayB = 155;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '4' && angleDigit2 == '0'){
+          calibratedDelayB = 180;
+          return calibratedDelayB;
+        }
+        else if( angleDigit1 == '9' && angleDigit2 == '0'){
+          calibratedDelayB = 365;
+          return calibratedDelayB;
+        }
+        else{
+          Serial.println("No calibrated delay for given angle Anti CW"); 
+          return 0;
+        }
+
+    }
+    
+}
 
 
 
@@ -576,8 +640,8 @@ void loop(){
     //Finding the calibrated Angle delay values for the Servo Rotation method
     // So for this method ONLY TAKE TWO DIGIT ANGLES: 10, 20, 30, 40 and 90
     
-    int delayA = calibratedDelayAngles(parsedData[0], parsedData[2], parsedData[3]);
-    int delayB = calibratedDelayAngles(parsedData[4], parsedData[6], parsedData[7]);
+    int delayA = calibratedDelayAngles_MotorA(parsedData[0], parsedData[2], parsedData[3]);
+    int delayB = calibratedDelayAngles_MotorB(parsedData[4], parsedData[6], parsedData[7]);
     
     
     
