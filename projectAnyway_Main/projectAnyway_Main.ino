@@ -357,7 +357,7 @@ void readSerial(){
 }
 */
 //rotate servo A with n number of steps clockwise
-void rotateServoAclockwise(int numStepsA)
+void rotateServoAclockwise(int numStepsA, int cwDelayA)
 {
   myServoA.attach(servoPinA);
   //digitalWrite(servoPinA, HIGH);
@@ -365,7 +365,7 @@ void rotateServoAclockwise(int numStepsA)
 //  for(a =0; a < numStepsA; a++)
 //  {
     myServoA.write(0);
-    delay(ServoDelay*numStepsA);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(cwDelayA);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
 //  }
   myServoA.detach();
@@ -373,7 +373,7 @@ void rotateServoAclockwise(int numStepsA)
 }
 
 //rotate servo A with n number of steps clockwise
-void rotateServoAanticlock(int numStepsA)
+void rotateServoAanticlock(int numStepsA, int acwDelayA)
 {
   myServoA.attach(servoPinA);
   //digitalWrite(servoPinA, HIGH);
@@ -381,7 +381,7 @@ void rotateServoAanticlock(int numStepsA)
 //  for(a =0; a < numStepsA; a++)
 //  {
     myServoA.write(180);
-    delay(ServoDelay*numStepsA);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(acwDelayA);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoA.write(100);
 //  }
   myServoA.detach();
@@ -411,7 +411,7 @@ void rotateServoAanticlock(int numStepsA)
   }  
 }
 */
-void rotateServoBclockwise(int numStepsB)
+void rotateServoBclockwise(int numStepsB, int cwDelayB)
 {
   myServoB.attach(servoPinB);
   //digitalWrite(servoPinB, HIGH);
@@ -420,7 +420,7 @@ void rotateServoBclockwise(int numStepsB)
 //  for(a =0; a < numStepsB; a++)
  // {
     myServoB.write(0);
-    delay(ServoDelay*numStepsB);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(cwDelayB);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoB.write(100);
  // }
   myServoB.detach();
@@ -428,7 +428,7 @@ void rotateServoBclockwise(int numStepsB)
 }
 
 //rotate servo A with n number of steps clockwise
-void rotateServoBanticlock(int numStepsB)
+void rotateServoBanticlock(int numStepsB, int acwDelayB)
 {
   myServoB.attach(servoPinB);
   //digitalWrite(servoPinB, HIGH);
@@ -436,7 +436,7 @@ void rotateServoBanticlock(int numStepsB)
 //  for(a =0; a < numStepsB; a++)
 //  {
     myServoB.write(180);
-    delay(ServoDelay*numStepsB);                //Delay of 40ms corresponds to a 10 degree rotate per step
+    delay(acwDelayB);                //Delay of 40ms corresponds to a 10 degree rotate per step
     myServoB.write(100);
 //  }
   myServoB.detach();
@@ -445,6 +445,88 @@ void rotateServoBanticlock(int numStepsB)
 
 
 //&&&&&&&&&&&&&&&&&&&&&&   END OF MOTOR CONTROL CODE    &&&&&&&&&&&&&&&&&&&&&&
+
+
+
+/* METHOD DESCRIPTION: IMPORTANT
+    This method is used to find the "calibrated" delay values needed for the Servo Rotate Method
+    in order to get the best corresponding accuracy of the specified angle. We determined these delay
+    values from testing the individual motors for our prototype and evaluating the best delay values 
+    for angles: 10, 20, 30, 40, and 90 degrees. We needed to do this because the Servo motors didn't turn an accurate
+    angle degree for one given delay value (see rotation servo methods).
+    
+    Delay value represent the amount of rotation the motor -- continue to rotate for that amount time at a fixed speed. So a delay of 360 ms at the fixed
+    Servo speed corresponds to a 90 degree rotation
+
+*/
+//NOTE: Only for angles 10, 20, 30, 40, and 90 degrees
+int calibratedDelayAngles(char clockRotation, char angleDigit1, char angleDigit2){
+    
+    int calibratedDelay =0;
+    
+    switch(clockRotation){
+      
+      //Clock Wise
+      case '0':
+        if( angleDigit1 == '1' && angleDigit2 == '0'){
+          calibratedDelay = 55;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '2' && angleDigit2 == '0'){
+          calibratedDelay = 95;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '3' && angleDigit2 == '0'){
+          calibratedDelay = 130;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '4' && angleDigit2 == '0'){
+          calibratedDelay = 170;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '9' && angleDigit2 == '0'){
+          calibratedDelay = 360;
+          return calibratedDelay;
+        }
+        else{
+          Serial.println("No calibrated delay for given angle"); 
+          return 0;
+        }
+      
+      //Anti Clock Wise
+      case '1':
+        if( angleDigit1 == '1' && angleDigit2 == '0'){
+          calibratedDelay = 60;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '2' && angleDigit2 == '0'){
+          calibratedDelay = 105;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '3' && angleDigit2 == '0'){
+          calibratedDelay = 155;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '4' && angleDigit2 == '0'){
+          calibratedDelay = 180;
+          return calibratedDelay;
+        }
+        else if( angleDigit1 == '9' && angleDigit2 == '0'){
+          calibratedDelay = 365;
+          return calibratedDelay;
+        }
+        else{
+          Serial.println("No calibrated delay for given angle Anti CW"); 
+          return 0;
+        }
+      
+    
+    
+    }
+    
+}
+
+
 
 
 
@@ -490,15 +572,24 @@ void loop(){
     (directionB == 0)? Serial.print("clockwise"):Serial.print("anticlockwise");
     Serial.println();
     
+    
+    //Finding the calibrated Angle delay values for the Servo Rotation method
+    // So for this method ONLY TAKE TWO DIGIT ANGLES: 10, 20, 30, 40 and 90
+    
+    int delayA = calibratedDelayAngles(parsedData[0], parsedData[2], parsedData[3]);
+    int delayB = calibratedDelayAngles(parsedData[4], parsedData[6], parsedData[7]);
+    
+    
+    
     if (stepA>0)
     {
       if (!directionA)
       {
-        rotateServoAclockwise(stepA);
+        rotateServoAclockwise(stepA, delayA);
       }
       else
       {
-        rotateServoAanticlock(stepA);
+        rotateServoAanticlock(stepA, delayA);
       }
     }
     
@@ -506,11 +597,11 @@ void loop(){
     {
       if (!directionB)
       {
-        rotateServoBclockwise(stepB);
+        rotateServoBclockwise(stepB, delayB);
       }
       else
       {
-        rotateServoBanticlock(stepB);
+        rotateServoBanticlock(stepB, delayB);
       }
     }
      
